@@ -15,8 +15,11 @@
   (first (second (first q))))
 
 (defn drop-first [q]
-  (assoc q (first (first q))
-	 (rest (first q))))
+  (let [first-elems (rest (second (first q)))]
+    (if (empty? first-elems)
+      (dissoc q (first (first q)))
+      (assoc q (first (first q))
+	     (vec first-elems)))))
 
 (defn rekey [q x old new]
   "moves [x] from [old] to [new] key in [q]"
