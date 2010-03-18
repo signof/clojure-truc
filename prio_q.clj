@@ -5,11 +5,11 @@
 ; possibly quite slow
 ;
 
-(defn make-q [comp] 
+(defn make [comp] 
   (sorted-map-by comp))
 
 (defn insert [q prio x]
-  (merge-with concat q {prio [x]}))
+  (merge-with #(vec (concat %1 %2)) q {prio [x]}))
 
 (defn take-first [q]
   (first (second (first q))))
