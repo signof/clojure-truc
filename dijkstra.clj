@@ -1,0 +1,32 @@
+;(ns at.ac.tuwien.complang.chocolate)
+(ns algs)
+
+(defstruct q-node :node :cost :path)
+(defn- q-node-for-source [v]
+  (struct q-node v 0 (list v)))
+(defn- q-nodes-for-neighbours [vq nbrs cost]
+  "generates new nodes for insertion into PQ for all the neighbours of the unerlying graph node of the PQ node [vq]. Neighbours are determined by the [nbrs] function, cost of edges by [cost]"
+  (let [{v :node vc :cost vp :path} vq]    
+    (for [n (nbrs v)]
+      (struct q-node 
+              n 
+              (+ vc (cost v n)) 
+              (conj (:path vq) n)))))
+(defn- new-pq [] (prio-q/make #(compare (:cost %1) (:cost %2))))
+
+;
+;
+(defn dijkstra-seq [src nbrs cost]
+  "Lazily calculates the shortest path (according to [cost]) from the source [src] to all processes. The graph is defined by the [nbrs] function, which should return a collection of neighbours when supplied a node."
+  (letfn [(do-dij [pq set]
+		  (when-let [n (prio-q/take-first pq)]
+		    (let [pq (prio-q/drop-first pq)]
+		      (if (contains? set n)
+			(recur pq set)
+			(cons n
+			 (recur (into pq (q-nodes-for-neighbours head nbrs cost))
+				(conj set n)))))))]
+    (do-dij (new-pq) #{})))
+
+(defn dijkstra [src nbrs cost dst]
+  (filter #(= dst %) (dijskstra-seq src nbrs cost)))
