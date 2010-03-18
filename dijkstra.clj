@@ -1,5 +1,4 @@
-;(ns at.ac.tuwien.complang.chocolate)
-(ns algs)
+(ns dijkstra)
 
 (defstruct q-node :node :cost :path)
 (defn- q-node-for-source [v]
@@ -23,10 +22,18 @@
 		    (let [pq (prio-q/drop-first pq)]
 		      (if (contains? set n)
 			(recur pq set)
-			(cons n
-			 (recur (into pq (q-nodes-for-neighbours head nbrs cost))
-				(conj set n)))))))]
+			(lazy-seq 
+			 (cons n
+			       (do-dij (into pq (q-nodes-for-neighbours n nbrs cost))
+				       (conj set n))))))))]
     (do-dij (new-pq) #{})))
 
 (defn dijkstra [src nbrs cost dst]
-  (filter #(= dst %) (dijskstra-seq src nbrs cost)))
+  (filter #(= dst %) (dijkstra-seq src nbrs cost)))
+
+(defmacro dijkstra-path [& args]
+  "Like dijkstra but fetches "
+  `(:path (dijkstra-path ~@args)))
+(defmacro dijkstra-cost [& args]
+  `(:path (dijkstra-path ~@args)))
+
