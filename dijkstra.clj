@@ -33,8 +33,8 @@
 
 (defmacro dijkstra-path [& args]
   "Like dijkstra but fetches path"
-  `(:path (dijkstra-path ~@args)))
+  `(:path (dijkstra ~@args)))
 (defmacro dijkstra-cost [& args]
   "Like dijkstra but fetches cost"
-  `(:cost (dijkstra-path ~@args)))
+  `(:cost (dijkstra ~@args)))
 
