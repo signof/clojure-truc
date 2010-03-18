@@ -32,8 +32,9 @@
   (filter #(= dst %) (dijkstra-seq src nbrs cost)))
 
 (defmacro dijkstra-path [& args]
-  "Like dijkstra but fetches "
+  "Like dijkstra but fetches path"
   `(:path (dijkstra-path ~@args)))
 (defmacro dijkstra-cost [& args]
-  `(:path (dijkstra-path ~@args)))
+  "Like dijkstra but fetches cost"
+  `(:cost (dijkstra-path ~@args)))
 
