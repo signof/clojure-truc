@@ -2,9 +2,11 @@
 
 (defstruct q-node :node :cost :path)
 (defn- q-node-for-source [v]
-  (struct q-node v 0 (list v)))
-(defn- q-nodes-for-neighbours [vq nbrs cost]
-  "generates new nodes for insertion into PQ for all the neighbours of the unerlying graph node of the PQ node [vq]. Neighbours are determined by the [nbrs] function, cost of edges by [cost]"
+  (struct q-node v 0 []))
+(defn q-nodes-for-neighbours [vq nbrs cost]
+  "generates new nodes for insertion into PQ for all the neighbours 
+  of the unerlying graph node of the PQ node [vq]. Neighbours are 
+  determined by the [nbrs] function, cost of edges by [cost]"
   (let [{v :node vc :cost vp :path} vq]    
     (for [n (nbrs v)]
       (struct q-node 
@@ -16,7 +18,10 @@
 ;
 ;
 (defn dijkstra-seq [src nbrs cost]
-  "Lazily calculates the shortest path (according to [cost]) from the source [src] to all processes. The graph is defined by the [nbrs] function, which should return a collection of neighbours when supplied a node."
+  "Lazily calculates the shortest path (according to [cost]) from 
+  the source [src] to all processes. The graph is defined by the 
+  [nbrs] function, which should return a collection of neighbours 
+  when supplied a node."
   (letfn [(do-dij [pq set]
 		  (when-let [n (prio-q/take-first pq)]
 		    (let [pq (prio-q/drop-first pq)]
