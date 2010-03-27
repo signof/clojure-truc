@@ -29,13 +29,13 @@
   (letfn [(do-dij [pq set]
 		  (when-let [n (prio-q/take-first pq)]
 		    (let [pq (prio-q/drop-first pq)]
-		      (if (contains? set n)
+		      (if (contains? set (:node n))
 			(recur pq set)
 			(lazy-seq 
 			 (cons n
-			       (do-dij (into pq (q-nodes-for-neighbours n nbrs cost))
-				       (conj set n))))))))]
-    (do-dij (new-pq) #{})))
+			       (do-dij (add-nodes pq (q-nodes-for-neighbours n nbrs cost))
+				       (conj set (:node n)))))))))]
+    (do-dij (new-pq src) #{})))
 
 (defn dijkstra [src nbrs cost dst]
   (filter #(= dst %) (dijkstra-seq src nbrs cost)))
