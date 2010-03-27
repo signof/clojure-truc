@@ -3,7 +3,7 @@
 (defstruct q-node :node :cost :path)
 (defn- q-node-for-source [v]
   (struct q-node v 0 []))
-(defn q-nodes-for-neighbours [vq nbrs cost]
+(defn- q-nodes-for-neighbours [vq nbrs cost]
   "generates new nodes for insertion into PQ for all the neighbours 
   of the unerlying graph node of the PQ node [vq]. Neighbours are 
   determined by the [nbrs] function, cost of edges by [cost]"
@@ -13,7 +13,11 @@
               n 
               (+ vc (cost v n)) 
               (conj (:path vq) n)))))
-(defn- new-pq [] (prio-q/make #(compare (:cost %1) (:cost %2))))
+(defn- new-pq 
+  ([] (prio-q/make compare)) 
+  ([src] (prio-q/insert (new-pq) 0 (q-node-for-source src))))
+(defn- add-nodes [pq nodes] 
+  (reduce (fn [pq n] (prio-q/insert pq (:cost n) n)) pq nodes))
 
 ;
 ;
