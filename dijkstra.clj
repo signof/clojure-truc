@@ -9,10 +9,10 @@
   determined by the [nbrs] function, cost of edges by [cost]"
   (let [{v :node vc :cost vp :path} vq]    
     (for [n (nbrs v)]
-      (struct q-node 
-              n 
-              (+ vc (cost v n)) 
-              (conj (:path vq) n)))))
+      (struct q-node
+	      n
+	      (+ vc (cost v n))
+	      (conj (:path vq) n)))))
 (defn- new-pq 
   ([] (prio-q/make compare)) 
   ([src] (prio-q/insert (new-pq) 0 (q-node-for-source src))))
